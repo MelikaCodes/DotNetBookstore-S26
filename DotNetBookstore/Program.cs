@@ -1,6 +1,7 @@
 using DotNetBookstore.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,30 @@ var hostedOnRender = builder.Configuration["RENDER"] == "true";
 
 if (!string.IsNullOrWhiteSpace(postgres))
 {
-    builder.Services.AddDbContext<PostgresBookstoreContext>(options => options.UseNpgsql(postgres));
+    var connection = postgres.Trim();
+    const string psqlPrefix = "psql '";
+    if (connection.StartsWith(psqlPrefix, StringComparison.Ordinal) && connection.EndsWith("'", StringComparison.Ordinal))
+        connection = connection[psqlPrefix.Length..^1];
+
+    if (Uri.TryCreate(connection, UriKind.Absolute, out var uri) && uri.Scheme is "postgres" or "postgresql")
+    {
+        var credentials = uri.UserInfo.Split(':', 2);
+        if (credentials.Length != 2)
+            throw new InvalidOperationException("The PostgreSQL URL needs a username and password.");
+
+        connection = new NpgsqlConnectionStringBuilder
+        {
+            Host = uri.Host,
+            Port = uri.IsDefaultPort ? 5432 : uri.Port,
+            Database = Uri.UnescapeDataString(uri.AbsolutePath.TrimStart('/')),
+            Username = Uri.UnescapeDataString(credentials[0]),
+            Password = Uri.UnescapeDataString(credentials[1]),
+            SslMode = SslMode.VerifyFull,
+            ChannelBinding = ChannelBinding.Require
+        }.ConnectionString;
+    }
+
+    builder.Services.AddDbContext<PostgresBookstoreContext>(options => options.UseNpgsql(connection));
     builder.Services.AddScoped<ApplicationDbContext>(services =>
         services.GetRequiredService<PostgresBookstoreContext>());
 }
