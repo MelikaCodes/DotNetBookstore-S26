@@ -1,0 +1,58 @@
+@model CartViewModel
+@{
+    ViewData["Title"] = "Your cart";
+    var total = Model.Lines.Sum(line => (long)line.Book.PriceCents * line.Quantity);
+}
+
+<h1 class="mt-4">Your cart</h1>
+@if (TempData["CartMessage"] is string cartMessage)
+{
+    <p class="alert alert-warning" role="alert">@cartMessage</p>
+}
+
+@if (Model.Lines.Count == 0)
+{
+    <p>Your cart is empty.</p>
+    <a class="btn btn-dark" asp-controller="Categories" asp-action="Browse">Browse books</a>
+}
+else
+{
+    <div class="vstack gap-3 my-4">
+        @foreach (var line in Model.Lines)
+        {
+            <article class="card catalog-card">
+                <div class="card-body d-flex flex-wrap align-items-end gap-3">
+                    <div class="me-auto">
+                        <h2 class="h5">@line.Book.Title</h2>
+                        <p class="mb-0">@line.Book.PriceLabel per book</p>
+                    </div>
+                    <form asp-action="Update" asp-route-id="@line.Book.BookId" method="post">
+                        <label for="quantity-@line.Book.BookId" class="form-label">Quantity</label>
+                        <div class="input-group">
+                            <input id="quantity-@line.Book.BookId" name="quantity" class="form-control cart-quantity" type="number"
+                                   min="1" max="20" required value="@line.Quantity" />
+                            <button type="submit" class="btn btn-outline-dark">Update</button>
+                        </div>
+                    </form>
+                    <form asp-action="Remove" asp-route-id="@line.Book.BookId" method="post">
+                        <button type="submit" class="btn btn-outline-dark" aria-label="Remove @line.Book.Title">Remove</button>
+                    </form>
+                </div>
+            </article>
+        }
+    </div>
+    <p class="fs-5 fw-semibold">Total @Book.FormatPrice(total)</p>
+    <p>Demo orders show how checkout works. No payment is collected.</p>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <form asp-action="Checkout" method="post">
+            <input type="hidden" name="checkoutId" value="@Model.CheckoutId" />
+            <button class="btn btn-dark" type="submit">Place demo order</button>
+        </form>
+    }
+    else
+    {
+        <a class="btn btn-dark" asp-area="Identity" asp-page="/Account/Login" asp-route-returnUrl="@Url.Action("Index", "Cart")">Sign in to check out</a>
+    }
+    <p class="mt-3"><a asp-controller="Categories" asp-action="Browse">Continue browsing</a></p>
+}

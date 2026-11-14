@@ -9,5 +9,9 @@
     <h1>@Model.Title</h1>
     <p class="lead">By @Model.Author</p>
     <p>@Model.Description</p>
+    <p class="fw-semibold">@Model.PriceLabel</p>
+    <form class="d-inline" asp-controller="Cart" asp-action="Add" asp-route-id="@Model.BookId" method="post">
+        <button class="btn btn-dark" type="submit">Add to cart</button>
+    </form>
     <a class="btn btn-outline-dark" asp-action="Browse">Browse all books</a>
 </article>

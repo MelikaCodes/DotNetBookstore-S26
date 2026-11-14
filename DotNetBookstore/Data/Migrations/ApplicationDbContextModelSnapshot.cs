@@ -34,6 +34,9 @@ namespace DotNetBookstore.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("PriceCents")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -51,6 +54,7 @@ namespace DotNetBookstore.Data.Migrations
                             Author = "Jane Austen",
                             CategoryId = 1,
                             Description = "Elizabeth Bennet reconsiders her first impressions of Mr. Darcy as family expectations put both of them to the test.",
+                            PriceCents = 1299,
                             Title = "Pride and Prejudice"
                         },
                         new
@@ -59,6 +63,7 @@ namespace DotNetBookstore.Data.Migrations
                             Author = "Louisa May Alcott",
                             CategoryId = 1,
                             Description = "Four sisters grow up during the American Civil War and find different ways to pursue the lives they want.",
+                            PriceCents = 1099,
                             Title = "Little Women"
                         },
                         new
@@ -67,6 +72,7 @@ namespace DotNetBookstore.Data.Migrations
                             Author = "Mary Shelley",
                             CategoryId = 2,
                             Description = "A scientist brings a creature to life and must face the consequences of abandoning his creation.",
+                            PriceCents = 999,
                             Title = "Frankenstein"
                         },
                         new
@@ -75,6 +81,7 @@ namespace DotNetBookstore.Data.Migrations
                             Author = "H. G. Wells",
                             CategoryId = 2,
                             Description = "An inventor travels into the distant future and discovers a world whose apparent peace hides a darker reality.",
+                            PriceCents = 899,
                             Title = "The Time Machine"
                         },
                         new
@@ -83,6 +90,7 @@ namespace DotNetBookstore.Data.Migrations
                             Author = "Herodotus",
                             CategoryId = 3,
                             Description = "An account of the Greek and Persian worlds that traces the events and rivalries behind their wars.",
+                            PriceCents = 1599,
                             Title = "The Histories"
                         },
                         new
@@ -91,6 +99,7 @@ namespace DotNetBookstore.Data.Migrations
                             Author = "Thucydides",
                             CategoryId = 3,
                             Description = "An account of the war between Athens and Sparta and the choices that drew their allies into the conflict.",
+                            PriceCents = 1499,
                             Title = "The History of the Peloponnesian War"
                         });
                 });
@@ -125,6 +134,56 @@ namespace DotNetBookstore.Data.Migrations
                             CategoryId = 3,
                             Name = "History"
                         });
+                });
+
+            modelBuilder.Entity("DotNetBookstore.Models.Order", b =>
+                {
+                    b.Property<int>("OrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("CheckoutId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("PlacedAtUtc")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("OrderId");
+
+                    b.HasIndex("CustomerId", "CheckoutId")
+                        .IsUnique();
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("DotNetBookstore.Models.OrderLine", b =>
+                {
+                    b.Property<int>("OrderLineId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UnitPriceCents")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("OrderLineId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderLine");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -330,6 +389,26 @@ namespace DotNetBookstore.Data.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("DotNetBookstore.Models.Order", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("DotNetBookstore.Models.OrderLine", b =>
+                {
+                    b.HasOne("DotNetBookstore.Models.Order", null)
+                        .WithMany("Lines")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -379,6 +458,11 @@ namespace DotNetBookstore.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DotNetBookstore.Models.Order", b =>
+                {
+                    b.Navigation("Lines");
                 });
 #pragma warning restore 612, 618
         }

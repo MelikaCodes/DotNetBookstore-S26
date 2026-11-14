@@ -36,7 +36,8 @@ else
                     <div class="card-body">
                         <h2 class="h4"><a asp-action="Details" asp-route-id="@book.BookId">@book.Title</a></h2>
                         <p class="mb-1">@book.Author</p>
-                        <p class="mb-0 text-body-secondary">@book.Category.Name</p>
+                        <p class="text-body-secondary">@book.Category.Name</p>
+                        <p class="mb-0 fw-semibold">@book.PriceLabel</p>
                     </div>
                 </article>
             </div>

@@ -65,3 +65,7 @@ a:hover {
 .catalog-search, .book-details {
   max-width: 42rem;
 }
+
+.cart-quantity {
+  width: 5rem;
+}

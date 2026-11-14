@@ -1,6 +1,6 @@
 # DotNet Bookstore
 
-An ASP.NET Core MVC bookstore demo based on the COMP2084 classroom starter by Dario Hesami. This version adds a SQLite catalog. Visitors can browse by category, search by title or author, and open a book's details.
+An ASP.NET Core MVC bookstore demo based on Dario Hesami’s COMP2084 classroom starter. Browse and search a SQLite catalog, add books to a cart, and sign in to place demo orders and see your order history. Checkout uses sample prices. The app does not collect payments or shipping information.
 
 ## Run locally
 
@@ -10,13 +10,15 @@ Install the .NET 10 SDK. From the repository root, run:
 dotnet run --project DotNetBookstore --launch-profile http
 ```
 
-Open the localhost address printed by the app. On its first run, the app creates `DotNetBookstore/bookstore.db` and loads the sample books. The database is ignored by Git.
+Open [the Bookstore on localhost](http://localhost:5170). The app applies its SQLite migrations on startup. A new database includes six sample books in three categories. Git ignores the local database.
 
-## Explore the code
+To try checkout, use a test email address to register a demo account. Add a book from its details page, open the cart, and place a demo order. The cart stays with the browser session, and unit prices and quantities are saved as part of each demo order.
 
-- `Controllers/CategoriesController.cs` handles listing, search, and details.
-- `Views/Categories/` contains the Razor views.
-- `Data/ApplicationDbContext.cs` defines the catalog and seed data.
-- `Data/Migrations/` creates the catalog and the existing ASP.NET Core Identity tables in SQLite.
+## Code
 
-The demo focuses on browsing books. See [LICENSE.txt](LICENSE.txt) for the classroom starter’s terms.
+- `Controllers/CategoriesController.cs` handles browsing, search, and book details.
+- `Controllers/CartController.cs` and `Controllers/OrdersController.cs` handle cart changes, checkout, and order history.
+- `Data/ApplicationDbContext.cs` configures the catalog, order data, and ASP.NET Core Identity.
+- `Data/Migrations/` contains the SQLite schema and sample data.
+
+See [LICENSE.txt](LICENSE.txt) for the classroom starter’s educational-use terms.
