@@ -1,3 +1,17 @@
+:root {
+  --bookstore-paper: #f8f1e5;
+  --bookstore-card: #fffaf1;
+  --bookstore-trim: #eee0cd;
+  --bookstore-ink: #3b2a22;
+  --bookstore-brown: #684332;
+  --bookstore-brown-hover: #4d3024;
+  --bookstore-border: #d7c3ad;
+  --bookstore-focus: #946644;
+  --bs-body-color: var(--bookstore-ink);
+  --bs-body-bg: var(--bookstore-paper);
+  --bs-border-color: var(--bookstore-border);
+}
+
 html {
   font-size: 14px;
 }
@@ -9,7 +23,7 @@ html {
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem var(--bookstore-focus);
 }
 
 html {
@@ -30,23 +44,60 @@ body {
   text-align: start;
 }
 
-body {
-  background: #f8f5ed;
-  color: #26382e;
+.bookstore-nav {
+  --bs-navbar-color: var(--bookstore-ink);
+  --bs-navbar-hover-color: var(--bookstore-brown);
+  --bs-navbar-brand-color: var(--bookstore-ink);
+  --bs-navbar-brand-hover-color: var(--bookstore-brown);
+  background: var(--bookstore-trim);
 }
 
-a {
-  color: #345a47;
+a, .btn-link {
+  color: var(--bookstore-brown);
 }
 
-a:hover {
-  color: #234434;
+a:hover, .btn-link:hover {
+  color: var(--bookstore-brown-hover);
+}
+
+.btn-dark, .btn-primary {
+  --bs-btn-color: var(--bookstore-card);
+  --bs-btn-bg: var(--bookstore-brown);
+  --bs-btn-border-color: var(--bookstore-brown);
+  --bs-btn-hover-color: var(--bookstore-card);
+  --bs-btn-hover-bg: var(--bookstore-brown-hover);
+  --bs-btn-hover-border-color: var(--bookstore-brown-hover);
+  --bs-btn-active-color: var(--bookstore-card);
+  --bs-btn-active-bg: var(--bookstore-brown-hover);
+  --bs-btn-active-border-color: var(--bookstore-brown-hover);
+}
+
+.btn-outline-dark {
+  --bs-btn-color: var(--bookstore-brown);
+  --bs-btn-border-color: var(--bookstore-brown);
+  --bs-btn-hover-color: var(--bookstore-card);
+  --bs-btn-hover-bg: var(--bookstore-brown);
+  --bs-btn-hover-border-color: var(--bookstore-brown);
+  --bs-btn-active-color: var(--bookstore-card);
+  --bs-btn-active-bg: var(--bookstore-brown-hover);
+  --bs-btn-active-border-color: var(--bookstore-brown-hover);
 }
 
 .bookstore-hero {
   padding: clamp(2rem, 8vw, 6rem);
-  background: #233c30;
-  color: #fcf6e7;
+  background: var(--bookstore-brown-hover);
+  color: var(--bookstore-card);
+}
+
+.bookstore-hero .btn-light {
+  --bs-btn-color: var(--bookstore-ink);
+  --bs-btn-bg: var(--bookstore-card);
+  --bs-btn-border-color: var(--bookstore-card);
+  --bs-btn-hover-color: var(--bookstore-ink);
+  --bs-btn-hover-bg: var(--bookstore-trim);
+  --bs-btn-hover-border-color: var(--bookstore-trim);
+  --bs-btn-active-bg: var(--bookstore-trim);
+  --bs-btn-active-border-color: var(--bookstore-trim);
 }
 
 .bookstore-hero h1 {
@@ -58,8 +109,8 @@ a:hover {
 }
 
 .catalog-card {
-  border-color: #cec8b6;
-  background: #fffcf4;
+  border-color: var(--bookstore-border);
+  background: var(--bookstore-card);
 }
 
 .catalog-search, .book-details {
