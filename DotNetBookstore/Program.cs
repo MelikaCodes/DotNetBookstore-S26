@@ -52,6 +52,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
     options.Stores.SchemaVersion = IdentitySchemaVersions.Version1;
+    options.Stores.MaxLengthForKeys = 0;
 })
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddDistributedMemoryCache();
