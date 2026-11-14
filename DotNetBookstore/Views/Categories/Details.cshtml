@@ -1,0 +1,13 @@
+@model Book
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<article class="book-details my-4">
+    <p class="mb-2"><a asp-action="Browse" asp-route-category="@Model.Category.Name">@Model.Category.Name</a></p>
+    <h1>@Model.Title</h1>
+    <p class="lead">By @Model.Author</p>
+    <p>@Model.Description</p>
+    <a class="btn btn-outline-dark" asp-action="Browse">Browse all books</a>
+</article>

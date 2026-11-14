@@ -29,3 +29,39 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+body {
+  background: #f8f5ed;
+  color: #26382e;
+}
+
+a {
+  color: #345a47;
+}
+
+a:hover {
+  color: #234434;
+}
+
+.bookstore-hero {
+  padding: clamp(2rem, 8vw, 6rem);
+  background: #233c30;
+  color: #fcf6e7;
+}
+
+.bookstore-hero h1 {
+  font-size: clamp(2.5rem, 7vw, 5rem);
+}
+
+.bookstore-hero h1, .catalog-card h2, .book-details h1 {
+  font-family: Georgia, serif;
+}
+
+.catalog-card {
+  border-color: #cec8b6;
+  background: #fffcf4;
+}
+
+.catalog-search, .book-details {
+  max-width: 42rem;
+}

@@ -1,8 +1,45 @@
-﻿@* This is the view for browsing a specific category. *@
+@model CatalogViewModel
 
 @{
-    ViewData["Title"] = $"Browsing {ViewBag.Category}";
+    ViewData["Title"] = Model.Category?.Name ?? "All books";
 }
-<h1>Browsing @ViewBag.Category</h1>
 
-@* You can add additional content for the category browsing page here. *@   
+<p class="mt-4 mb-2"><a asp-action="Index">Book categories</a></p>
+<h1>@ViewData["Title"]</h1>
+<form method="get" asp-action="Browse" class="my-4 catalog-search">
+    @if (Model.Category is not null)
+    {
+        <input type="hidden" name="category" value="@Model.Category.Name" />
+    }
+    <label class="form-label" for="query">Search by title or author</label>
+    <div class="input-group">
+        <input class="form-control" type="search" id="query" name="query" value="@Model.Search" />
+        <button class="btn btn-dark" type="submit">Search</button>
+        @if (Model.Search.Length > 0)
+        {
+            <a class="btn btn-outline-dark" asp-action="Browse" asp-route-category="@Model.Category?.Name">Clear</a>
+        }
+    </div>
+</form>
+
+@if (Model.Books.Count == 0)
+{
+    <p>No books match your search.</p>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+        @foreach (var book in Model.Books)
+        {
+            <div class="col">
+                <article class="card catalog-card h-100">
+                    <div class="card-body">
+                        <h2 class="h4"><a asp-action="Details" asp-route-id="@book.BookId">@book.Title</a></h2>
+                        <p class="mb-1">@book.Author</p>
+                        <p class="mb-0 text-body-secondary">@book.Category.Name</p>
+                    </div>
+                </article>
+            </div>
+        }
+    </div>
+}
