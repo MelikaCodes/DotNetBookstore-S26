@@ -6,6 +6,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace DotNetBookstore.Controllers;
 
@@ -100,7 +101,9 @@ public class CartController(ApplicationDbContext database, UserManager<IdentityU
         {
             await database.SaveChangesAsync(cancellationToken);
         }
-        catch (DbUpdateException exception) when (exception.InnerException is SqliteException { SqliteExtendedErrorCode: 2067 })
+        catch (DbUpdateException exception) when (exception.InnerException is
+            SqliteException { SqliteExtendedErrorCode: 2067 } or
+            PostgresException { SqlState: PostgresErrorCodes.UniqueViolation })
         {
             if (await OrderExistsAsync(customer.Id, checkoutId, cancellationToken))
                 return RedirectToAction("Index", "Orders");

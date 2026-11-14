@@ -4,8 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DotNetBookstore.Data;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext(options)
+public class ApplicationDbContext : IdentityDbContext
 {
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : this((DbContextOptions)options) { }
+
+    protected ApplicationDbContext(DbContextOptions options) : base(options) { }
+
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Book> Books => Set<Book>();
 

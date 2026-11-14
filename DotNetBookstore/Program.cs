@@ -6,8 +6,23 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(connectionString));
+var postgres = builder.Configuration.GetConnectionString("Postgres");
+var hostedOnRender = builder.Configuration["RENDER"] == "true";
+
+if (!string.IsNullOrWhiteSpace(postgres))
+{
+    builder.Services.AddDbContext<PostgresBookstoreContext>(options => options.UseNpgsql(postgres));
+    builder.Services.AddScoped<ApplicationDbContext>(services =>
+        services.GetRequiredService<PostgresBookstoreContext>());
+}
+else if (hostedOnRender)
+{
+    throw new InvalidOperationException("Set ConnectionStrings__Postgres to the hosted database connection string.");
+}
+else
+{
+    builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(connectionString));
+}
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -16,9 +31,19 @@ builder.Services.AddSession(options =>
 {
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
+    if (hostedOnRender)
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 builder.Services.AddControllersWithViews(options =>
     options.Filters.Add(new Microsoft.AspNetCore.Mvc.AutoValidateAntiforgeryTokenAttribute()));
+
+if (hostedOnRender)
+{
+    builder.Services.ConfigureApplicationCookie(options =>
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always);
+    builder.Services.AddAntiforgery(options =>
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always);
+}
 
 var app = builder.Build();
 
@@ -26,11 +51,13 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    if (!hostedOnRender)
+        app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// Render terminates TLS and redirects HTTP at its edge.
+if (!hostedOnRender)
+    app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication();
