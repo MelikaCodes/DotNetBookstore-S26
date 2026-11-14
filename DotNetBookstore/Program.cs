@@ -84,9 +84,19 @@ if (!app.Environment.IsDevelopment())
         app.UseHsts();
 }
 
-// Render terminates TLS and redirects HTTP at its edge.
-if (!hostedOnRender)
+// Render redirects public HTTP at its edge and forwards HTTPS traffic to Kestrel over HTTP.
+if (hostedOnRender)
+{
+    app.Use((context, next) =>
+    {
+        context.Request.Scheme = "https";
+        return next(context);
+    });
+}
+else
+{
     app.UseHttpsRedirection();
+}
 app.UseRouting();
 
 app.UseAuthentication();
