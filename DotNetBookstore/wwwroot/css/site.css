@@ -120,3 +120,29 @@ a:hover, .btn-link:hover {
 .cart-quantity {
   width: 5rem;
 }
+
+.book-cover {
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background: var(--bookstore-trim);
+}
+
+.book-cover img {
+  display: block;
+  width: 100%;
+  max-width: 10rem;
+  height: 14rem;
+  object-fit: contain;
+}
+
+.book-details .book-cover {
+  width: fit-content;
+  max-width: 100%;
+  margin-block: 1rem;
+}
+
+.book-details .book-cover img {
+  max-width: 12rem;
+  height: 17rem;
+}

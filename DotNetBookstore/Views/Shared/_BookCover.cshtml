@@ -1,0 +1,21 @@
+@model Book
+
+@{
+    var cover = Model.BookId switch
+    {
+        1 => "pride-and-prejudice",
+        2 => "little-women",
+        3 => "frankenstein",
+        4 => "the-time-machine",
+        5 => "the-histories",
+        6 => "peloponnesian-war",
+        _ => null
+    };
+}
+
+@if (cover is not null)
+{
+    <div class="book-cover">
+        <img src="~/images/books/@(cover).jpg" alt="Cover of @Model.Title" width="200" height="300" loading="lazy" />
+    </div>
+}

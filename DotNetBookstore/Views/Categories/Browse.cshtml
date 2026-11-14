@@ -33,6 +33,7 @@ else
         {
             <div class="col">
                 <article class="card catalog-card h-100">
+                    <partial name="_BookCover" model="book" />
                     <div class="card-body">
                         <h2 class="h4"><a asp-action="Details" asp-route-id="@book.BookId">@book.Title</a></h2>
                         <p class="mb-1">@book.Author</p>
